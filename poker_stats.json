@@ -1,0 +1,56 @@
+{
+  "last_updated": "2025-11-05T07:45:23.706775",
+  "total_hands": 5,
+  "hands": [
+    {
+      "hand_notation": "AA",
+      "position": "BTN",
+      "decision": "RAISE",
+      "equity": 85.0,
+      "outcome": "win",
+      "profit": 50.0,
+      "hand_category": "PREMIUM",
+      "timestamp": "2025-11-05T07:45:23.706045"
+    },
+    {
+      "hand_notation": "AKs",
+      "position": "CO",
+      "decision": "RAISE",
+      "equity": 67.0,
+      "outcome": "win",
+      "profit": 30.0,
+      "hand_category": "PREMIUM",
+      "timestamp": "2025-11-05T07:45:23.706360"
+    },
+    {
+      "hand_notation": "JJ",
+      "position": "UTG",
+      "decision": "RAISE",
+      "equity": 56.0,
+      "outcome": "loss",
+      "profit": -25.0,
+      "hand_category": "STRONG",
+      "timestamp": "2025-11-05T07:45:23.706512"
+    },
+    {
+      "hand_notation": "72o",
+      "position": "BB",
+      "decision": "FOLD",
+      "equity": 15.0,
+      "outcome": "fold",
+      "profit": -1.0,
+      "hand_category": "WEAK",
+      "timestamp": "2025-11-05T07:45:23.706642"
+    },
+    {
+      "hand_notation": "AQo",
+      "position": "MP",
+      "decision": "CALL",
+      "equity": 42.0,
+      "outcome": "loss",
+      "profit": -20.0,
+      "hand_category": "STRONG",
+      "timestamp": "2025-11-05T07:45:23.706774"
+    }
+  ]
+}

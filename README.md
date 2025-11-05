@@ -21,6 +21,13 @@ A comprehensive poker assistant that calculates win probabilities and provides e
 - **📋 Batch Analysis Mode**: Analyze multiple scenarios at once and compare them
 - **✅ Enhanced Error Handling**: Robust input validation and helpful error messages
 
+### Professional Tools (NEWEST!)
+- **📈 Pre-flop Range Charts**: Position-aware starting hand recommendations with visual grid
+- **📊 Statistics Tracker**: Track and analyze your poker sessions with detailed metrics
+- **💾 Export Results**: Save analysis to JSON, CSV, HTML, or Markdown formats
+- **🎲 Hand Range Analysis**: Comprehensive pre-flop hand strength calculator
+- **📉 Session Tracking**: Monitor win rates, profit/loss, and decision patterns
+
 ## 🚀 Quick Start
 
 ### Installation
@@ -46,6 +53,15 @@ python3 quick_analyze.py "As Kd" "Ah 7s 3c" --opponents 2
 
 # Batch analysis of multiple scenarios
 python3 batch_analyze.py scenarios.txt
+
+# Pre-flop range charts (NEW!)
+python3 preflop_charts.py
+
+# Statistics tracker (NEW!)
+python3 stats_tracker.py
+
+# Export results (NEW!)
+python3 export_results.py
 
 # Original simple mode
 python3 poker_bot.py
@@ -181,6 +197,80 @@ Flush draw                     Ah 7h                 32.1%   0.3%  67.6%
 
 Analyzed 3 scenarios
 ```
+
+### 4. Pre-flop Range Charts
+
+Visual starting hand recommendations based on position:
+
+```bash
+python3 preflop_charts.py
+```
+
+**Features:**
+- Position-aware hand ranges (UTG, MP, CO, BTN, Blinds)
+- Visual hand strength grid with color coding
+- Specific hand recommendations with action advice
+- Range percentage calculations
+
+**Options:**
+1. View hand strength grid - See all 169 starting hands color-coded by strength
+2. View position-specific chart - Get recommendations for specific positions
+3. Get hand recommendation - Get specific advice for your hand and position
+4. View all positions - See recommended ranges for all positions
+
+**Example:**
+```
+Hand: A♠ K♦
+Position: Button
+Category: PREMIUM
+
+→ ACTION: RAISE
+Premium hand - always raise
+```
+
+### 5. Statistics Tracker
+
+Track and analyze your poker sessions:
+
+```bash
+python3 stats_tracker.py
+```
+
+**Features:**
+- Session tracking with win/loss records
+- Position-based win rate analysis
+- Decision pattern tracking (raise, call, fold frequencies)
+- Profit/loss calculations
+- Hand category distribution
+- Recent hands review
+
+**Stored Data:**
+- Hand notation and category
+- Position played from
+- Pre-flop decision
+- Equity percentage
+- Outcome (win/loss/fold)
+- Profit/loss amount
+
+### 6. Export Results
+
+Export your analysis to various formats:
+
+```bash
+python3 export_results.py
+```
+
+**Supported Formats:**
+- **JSON**: Machine-readable format with full metadata
+- **CSV**: Spreadsheet-compatible for Excel/Google Sheets
+- **HTML**: Beautiful styled reports with progress bars
+- **Markdown**: GitHub-compatible documentation format
+
+**Use Cases:**
+- Share analysis with study groups
+- Import into spreadsheets for further analysis
+- Create poker study materials
+- Document hand histories
 
 ## 📊 Understanding the Analysis
 
@@ -324,10 +414,14 @@ for draw_name, outs in draws['draws']:
 | File | Purpose |
 |------|---------|
 | `poker_bot.py` | Original simple interactive bot |
-| `poker_bot_enhanced.py` | Enhanced bot with all new features |
+| `poker_bot_enhanced.py` | Enhanced bot with all features |
 | `quick_analyze.py` | Command-line quick analysis tool |
 | `batch_analyze.py` | Batch scenario analyzer |
+| `preflop_charts.py` | Position-aware pre-flop range charts (NEW!) |
+| `stats_tracker.py` | Session statistics tracker (NEW!) |
+| `export_results.py` | Export results to JSON/CSV/HTML/MD (NEW!) |
 | `test_poker_bot.py` | Test suite for core functionality |
+| `example_scenarios.txt` | Example batch analysis scenarios |
 | `README.md` | This documentation |
 
 ## 🎯 Example Scenarios
@@ -376,14 +470,16 @@ This bot is perfect for:
 ## 🤝 Contributing
 
 Ideas for future enhancements:
-- [ ] Hand range analysis and assignment
+- [x] Pre-flop range charts generator ✓
+- [x] Hand range analysis and assignment ✓
+- [x] Statistics tracker ✓
+- [x] Export functionality (JSON, CSV, HTML, Markdown) ✓
 - [ ] GTO (Game Theory Optimal) recommendations
 - [ ] Web-based GUI interface
-- [ ] Opponent modeling with hand histories
+- [ ] Opponent modeling with AI/ML
 - [ ] Multi-table tournament (MTT) ICM calculator
-- [ ] Pre-flop range charts generator
 - [ ] Real-time odds overlay for online poker
-- [ ] Hand history analyzer
+- [ ] Advanced hand history analyzer with pattern recognition
 
 ## 📄 License
 
@@ -406,6 +502,15 @@ python3 quick_analyze.py "Jh Jd" "9h 8h 2c" --opponents 1
 # Batch compare scenarios
 python3 batch_analyze.py --create-example
 python3 batch_analyze.py example_scenarios.txt
+
+# Pre-flop range charts (NEW!)
+python3 preflop_charts.py
+
+# Track statistics (NEW!)
+python3 stats_tracker.py
+
+# Export results (NEW!)
+python3 export_results.py
 
 # High precision analysis
 python3 quick_analyze.py "As Kd" "Ah Kh Qh" -s 50000
