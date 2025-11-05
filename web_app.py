@@ -18,6 +18,7 @@ from poker_bot_enhanced import (
 from preflop_charts import PreFlopChart, Position
 from stats_tracker import PokerStats
 from ai_opponent import OpponentModeler, GTO_Solver
+from advanced_ai import AdvancedAI
 
 app = Flask(__name__)
 app.secret_key = secrets.token_hex(16)
@@ -27,6 +28,7 @@ CORS(app)
 stats = PokerStats()
 opponent_ai = OpponentModeler()
 gto_solver = GTO_Solver()
+advanced_ai = AdvancedAI()
 
 
 @app.route('/')
@@ -301,6 +303,40 @@ def get_gto_bet_size():
         )
 
         return jsonify(recommendation)
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/api/ai/analyze-opponent', methods=['POST'])
+def analyze_opponent_advanced():
+    """
+    Advanced AI opponent analysis with player profiling and bluff detection
+    POST /api/ai/analyze-opponent
+    {
+        "vpip": 0.25,
+        "pfr": 0.18,
+        "aggression": 2.0,
+        "action_history": ["raise", "bet"],
+        "bet_size": 75,
+        "pot_size": 100,
+        "board_texture": {"type": "dry", "flush_possible": false}
+    }
+    """
+    try:
+        data = request.get_json()
+
+        analysis = advanced_ai.analyze_opponent(
+            vpip=data.get('vpip', 0.25),
+            pfr=data.get('pfr', 0.18),
+            aggression=data.get('aggression', 2.0),
+            action_history=data.get('action_history', []),
+            bet_size=data.get('bet_size', 0),
+            pot_size=data.get('pot_size', 100),
+            board_texture=data.get('board_texture', {'type': 'unknown'})
+        )
+
+        return jsonify(analysis)
 
     except Exception as e:
         return jsonify({'error': str(e)}), 500
