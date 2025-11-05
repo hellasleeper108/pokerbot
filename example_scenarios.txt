@@ -1,0 +1,31 @@
+# Poker Scenarios - Batch Analysis
+# Format: Name | Hole Cards | Community Cards | Opponents
+#
+# Card format: Rank (A,K,Q,J,10,9-2) + Suit (s,h,d,c)
+# Examples: As = Ace of Spades, 10h = Ten of Hearts
+#
+# Leave Community Cards empty for pre-flop analysis
+# Opponents defaults to 1 if not specified
+
+# Classic matchups
+AA vs KK preflop | As Ah | | 1
+AA vs KK on flop | As Ah | Kc 7d 2h | 1
+Pocket Aces | As Ah | | 3
+
+# Drawing hands
+Flush draw | Ah 7h | Kh 3h 2c | 2
+Straight draw | 9s 8s | 7h 6d 2c | 2
+Gutshot | Jh 10h | 8d 7c 2s | 1
+
+# Made hands
+Top pair | As Kd | Ah 7s 3c | 2
+Two pair | Jh Js | Jc 3s 3h | 2
+Set | 7h 7d | 7s Ah Kc | 3
+
+# Weak hands
+Low pair | 3h 3d | Ah Kc Qd | 2
+High cards | As Kh | 9d 7c 2s | 2
+
+# Dominated hands
+Ace weak kicker | Ah 2d | | 1
+Ace vs Ace | As Kh | Ah Qd | 1
