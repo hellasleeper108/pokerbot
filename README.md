@@ -21,31 +21,63 @@ A comprehensive poker assistant that calculates win probabilities and provides e
 - **📋 Batch Analysis Mode**: Analyze multiple scenarios at once and compare them
 - **✅ Enhanced Error Handling**: Robust input validation and helpful error messages
 
-### Professional Tools (NEWEST!)
+### Professional Tools
 - **📈 Pre-flop Range Charts**: Position-aware starting hand recommendations with visual grid
 - **📊 Statistics Tracker**: Track and analyze your poker sessions with detailed metrics
 - **💾 Export Results**: Save analysis to JSON, CSV, HTML, or Markdown formats
 - **🎲 Hand Range Analysis**: Comprehensive pre-flop hand strength calculator
 - **📉 Session Tracking**: Monitor win rates, profit/loss, and decision patterns
 
+### 🌐 Web Application & AI (NEWEST!)
+- **🌐 Modern Web Interface**: Beautiful responsive web UI with real-time analysis
+- **🤖 AI Opponent Modeling**: Machine learning-based hand range prediction
+- **🎯 GTO Solver**: Game Theory Optimal strategy recommendations
+- **📡 REST API**: Full API for mobile apps and external integrations
+- **⚡ Real-time Calculations**: Instant probability updates in the browser
+- **🔮 Predictive Analytics**: AI-powered opponent tendency analysis
+
 ## 🚀 Quick Start
 
 ### Installation
 
-No external dependencies required! Just Python 3.6+
-
+#### Command-Line Tools (No Dependencies)
 ```bash
 # Clone or download the repository
 cd pokerbot
 
-# Make scripts executable (optional)
-chmod +x poker_bot_enhanced.py quick_analyze.py batch_analyze.py
+# No installation needed - pure Python!
+python3 poker_bot_enhanced.py
+```
+
+#### Web Application (Requires Flask)
+```bash
+# Install dependencies
+pip install -r requirements.txt
+
+# Start web server
+python3 web_app.py
+
+# Open browser to http://localhost:5000
 ```
 
 ### Basic Usage
 
+#### 🌐 Web Interface (Recommended!)
 ```bash
-# Interactive enhanced mode (recommended)
+python3 web_app.py
+# Then visit: http://localhost:5000
+```
+
+**Features:**
+- Beautiful modern UI with real-time analysis
+- AI opponent modeling
+- GTO solver recommendations
+- Interactive charts and graphs
+- Mobile-friendly responsive design
+
+#### Command-Line Tools
+```bash
+# Interactive enhanced mode
 python3 poker_bot_enhanced.py
 
 # Quick analysis from command line
@@ -54,13 +86,13 @@ python3 quick_analyze.py "As Kd" "Ah 7s 3c" --opponents 2
 # Batch analysis of multiple scenarios
 python3 batch_analyze.py scenarios.txt
 
-# Pre-flop range charts (NEW!)
+# Pre-flop range charts
 python3 preflop_charts.py
 
-# Statistics tracker (NEW!)
+# Statistics tracker
 python3 stats_tracker.py
 
-# Export results (NEW!)
+# Export results
 python3 export_results.py
 
 # Original simple mode
