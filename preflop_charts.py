@@ -81,12 +81,13 @@ class PreFlopChart:
     @staticmethod
     def _rank_to_char(rank: Rank) -> str:
         """Convert rank to character"""
-        char_map = {
-            Rank.ACE: 'A', Rank.KING: 'K', Rank.QUEEN: 'Q', Rank.JACK: 'J', Rank.TEN: 'T',
-            Rank.NINE: '9', Rank.EIGHT: '8', Rank.SEVEN: '7', Rank.SIX: '6',
-            Rank.FIVE: '5', Rank.FOUR: '4', Rank.THREE: '3', Rank.TWO: '2'
+        # Use rank.value to avoid enum identity issues with circular imports
+        value_map = {
+            14: 'A', 13: 'K', 12: 'Q', 11: 'J', 10: 'T',
+            9: '9', 8: '8', 7: '7', 6: '6',
+            5: '5', 4: '4', 3: '3', 2: '2'
         }
-        return char_map[rank]
+        return value_map[rank.value]
 
     @staticmethod
     def categorize_hand(hand_notation: str) -> HandCategory:

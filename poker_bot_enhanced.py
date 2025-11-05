@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """
 Enhanced Texas Hold'em Probability Bot
-Advanced features: colored output, outs calculator, draw detection, pre-flop rankings, EV calculations
+Advanced features: colored output, outs calculator, draw detection, pre-flop rankings, EV calculations,
+AI opponent modeling, GTO solver, player profiling, bluff detection
 """
 
 import random
@@ -10,6 +11,16 @@ from enum import Enum
 from typing import List, Tuple, Optional, Dict, Set
 from collections import Counter
 from itertools import combinations
+
+# Import advanced modules
+try:
+    from preflop_charts import PreFlopChart, Position, HandCategory
+    from ai_opponent import OpponentModeler, GTO_Solver
+    from advanced_ai import AdvancedAI, PlayerProfile, BluffDetector
+    ADVANCED_FEATURES = True
+except ImportError:
+    ADVANCED_FEATURES = False
+    print("Note: Advanced features not available. Install all modules for full functionality.")
 
 # ANSI color codes for terminal output
 class Colors:
@@ -592,6 +603,12 @@ def main():
     print(f"  {Colors.GREEN}✓{Colors.RESET} Pot odds & EV analysis")
     print(f"  {Colors.GREEN}✓{Colors.RESET} Color-coded recommendations")
 
+    if ADVANCED_FEATURES:
+        print(f"  {Colors.CYAN}★{Colors.RESET} AI opponent modeling")
+        print(f"  {Colors.CYAN}★{Colors.RESET} GTO solver recommendations")
+        print(f"  {Colors.CYAN}★{Colors.RESET} Player profiling & bluff detection")
+        print(f"  {Colors.CYAN}★{Colors.RESET} Position-aware pre-flop charts")
+
     print(f"\n{Colors.YELLOW}Card format:{Colors.RESET} Rank + Suit (e.g., As, Kh, 10d, 2c)")
     print(f"  Ranks: A, K, Q, J, 10, 9, 8, 7, 6, 5, 4, 3, 2")
     print(f"  Suits: s (spades), h (hearts), d (diamonds), c (clubs)")
@@ -621,6 +638,32 @@ def main():
 
     print(f"\n{Colors.BOLD}Your hole cards:{Colors.RESET} {hole_cards[0].colored_str()} {hole_cards[1].colored_str()}")
 
+    # Get position
+    player_position = None
+    if ADVANCED_FEATURES:
+        print(f"\n{Colors.BOLD}Select your position:{Colors.RESET}")
+        print("  1. UTG (Under the Gun)")
+        print("  2. MP (Middle Position)")
+        print("  3. CO (Cutoff)")
+        print("  4. BTN (Button)")
+        print("  5. SB (Small Blind)")
+        print("  6. BB (Big Blind)")
+
+        while True:
+            try:
+                pos_choice = input(f"\n{Colors.BOLD}Position (1-6):{Colors.RESET} ").strip()
+                position_map = {
+                    '1': Position.UTG, '2': Position.MP, '3': Position.CO,
+                    '4': Position.BTN, '5': Position.SB, '6': Position.BB
+                }
+                if pos_choice in position_map:
+                    player_position = position_map[pos_choice]
+                    break
+                else:
+                    print(f"{Colors.RED}✗ Error: Please enter 1-6{Colors.RESET}")
+            except Exception as e:
+                print(f"{Colors.RED}✗ Error: {e}{Colors.RESET}")
+
     # Get number of opponents
     while True:
         try:
@@ -641,6 +684,31 @@ def main():
     print(f"{Colors.BOLD}Hand Strength (Chen Formula):{Colors.RESET}")
     print(f"  Score: {Colors.YELLOW}{chen_score:.1f}{Colors.RESET}")
     print(f"  Category: {cat_color}{Colors.BOLD}{category}{Colors.RESET}\n")
+
+    # Position-aware pre-flop recommendations
+    if ADVANCED_FEATURES and player_position:
+        try:
+            print(f"{Colors.CYAN}{Colors.BOLD}Position-Aware Analysis:{Colors.RESET}")
+            print(f"  Your Position: {Colors.YELLOW}{player_position.value}{Colors.RESET}")
+
+            action_before = input(f"\n  Action before you (none/limp/raise): ").strip().lower()
+            if action_before not in ['none', 'limp', 'raise']:
+                action_before = 'none'
+
+            recommendation = PreFlopChart.get_recommendation(hole_cards, player_position, action_before)
+
+            rec_color = Colors.GREEN if recommendation['in_range'] else Colors.RED
+            print(f"\n  Hand: {Colors.YELLOW}{recommendation['hand']}{Colors.RESET}")
+            print(f"  In Range: {rec_color}{Colors.BOLD}{'YES' if recommendation['in_range'] else 'NO'}{Colors.RESET}")
+            print(f"  Recommendation: {rec_color}{Colors.BOLD}{recommendation['action']}{Colors.RESET}")
+            print(f"  {Colors.GRAY}{recommendation['description']}{Colors.RESET}\n")
+        except Exception as e:
+            import traceback
+            if '--debug' in sys.argv:
+                print(f"{Colors.YELLOW}⚠ Position analysis error:{Colors.RESET}")
+                traceback.print_exc()
+            else:
+                print(f"{Colors.YELLOW}⚠ Position analysis unavailable: {e}{Colors.RESET}\n")
 
     print(f"{Colors.GRAY}Calculating pre-flop win probability (5000 simulations)...{Colors.RESET}")
 
@@ -707,9 +775,18 @@ def main():
 
     # Pot odds calculation
     print(f"\n{Colors.BOLD}POT ODDS ANALYSIS{Colors.RESET}")
+    pot_size = 0
+    bet_to_call = 0
+    stack_size = 1000
+
     try:
         pot_size = float(input("Current pot size: $"))
         bet_to_call = float(input("Bet to call: $"))
+
+        if ADVANCED_FEATURES:
+            stack_input = input(f"Your stack size (default $1000): $").strip()
+            if stack_input:
+                stack_size = float(stack_input)
 
         pot_odds = ProbabilityCalculator.calculate_pot_odds(pot_size, bet_to_call)
         ev = ProbabilityCalculator.calculate_expected_value(flop_prob['win_or_tie'], pot_size, bet_to_call)
@@ -727,8 +804,112 @@ def main():
         else:
             print(f"\n{Colors.RED}{Colors.BOLD}✗ RECOMMENDATION: FOLD{Colors.RESET}")
             print(f"{Colors.RED}Insufficient equity - calling would be -EV{Colors.RESET}")
+
+        # GTO Solver recommendations
+        if ADVANCED_FEATURES:
+            gto_solver = GTO_Solver()
+            gto_action = gto_solver.get_gto_action(flop_prob['win'], pot_size, stack_size)
+
+            print(f"\n{Colors.CYAN}{Colors.BOLD}GTO SOLVER RECOMMENDATION:{Colors.RESET}")
+            print(f"  Action: {Colors.YELLOW}{Colors.BOLD}{gto_action['action']}{Colors.RESET}")
+            print(f"  Reasoning: {Colors.GRAY}{gto_action['reasoning']}{Colors.RESET}")
+
+            if gto_action.get('bet_frequency'):
+                print(f"  Bet Frequency: {Colors.CYAN}{gto_action['bet_frequency']:.1f}%{Colors.RESET}")
+            if gto_action.get('bluff_ratio'):
+                print(f"  Bluff Ratio: {Colors.CYAN}{gto_action['bluff_ratio']:.1f}%{Colors.RESET}")
+            if gto_action.get('optimal_bet_size'):
+                print(f"  Optimal Bet Size: {Colors.YELLOW}${gto_action['optimal_bet_size']:.2f}{Colors.RESET}")
+
     except ValueError:
         print(f"{Colors.YELLOW}Skipping pot odds analysis{Colors.RESET}")
+
+    # AI Opponent Analysis
+    if ADVANCED_FEATURES:
+        analyze_opponent = input(f"\n{Colors.CYAN}Analyze opponent? (y/n):{Colors.RESET} ").strip().lower()
+
+        if analyze_opponent == 'y':
+            print(f"\n{Colors.CYAN}{Colors.BOLD}AI OPPONENT ANALYSIS{Colors.RESET}")
+
+            try:
+                vpip = float(input("  Opponent VPIP % (e.g., 25 for 25%): ")) / 100
+                pfr = float(input("  Opponent PFR % (e.g., 18 for 18%): ")) / 100
+                aggression = float(input("  Opponent Aggression Factor (e.g., 2.0): "))
+
+                action_input = input("  Recent actions (e.g., raise,bet or press Enter): ").strip()
+                action_history = action_input.split(',') if action_input else []
+
+                bet_size_input = input("  Opponent's bet size (default 0): $").strip()
+                opponent_bet = float(bet_size_input) if bet_size_input else 0
+
+                # Run advanced AI analysis
+                advanced_ai = AdvancedAI()
+                opponent_modeler = OpponentModeler()
+
+                # Get board texture from opponent modeler
+                opponent_range = opponent_modeler.estimate_opponent_range(hole_cards, flop_cards, num_opponents)
+                board_texture = opponent_range['board_texture']
+
+                ai_analysis = advanced_ai.analyze_opponent(
+                    vpip=vpip,
+                    pfr=pfr,
+                    aggression=aggression,
+                    action_history=action_history,
+                    bet_size=opponent_bet,
+                    pot_size=pot_size,
+                    board_texture=board_texture
+                )
+
+                # Player Profile
+                profile = ai_analysis['player_profile']
+                print(f"\n  {Colors.BOLD}Player Type:{Colors.RESET} {Colors.YELLOW}{profile['full_name']}{Colors.RESET}")
+                print(f"  {Colors.GRAY}VPIP: {profile['stats']['vpip']:.1f}%, PFR: {profile['stats']['pfr']:.1f}%, Aggression: {profile['stats']['aggression']:.1f}{Colors.RESET}")
+
+                # Exploitative Strategy
+                exploit = ai_analysis['exploitative_strategy']
+                print(f"\n  {Colors.BOLD}Counter Strategy:{Colors.RESET}")
+                if exploit.get('general'):
+                    print(f"    {Colors.CYAN}General:{Colors.RESET} {exploit['general']}")
+                if exploit.get('counter_strategy'):
+                    print(f"    {Colors.CYAN}Key Approach:{Colors.RESET} {exploit['counter_strategy']}")
+                if exploit.get('when_they_bet'):
+                    print(f"    {Colors.CYAN}When They Bet:{Colors.RESET} {exploit['when_they_bet']}")
+                if exploit.get('bluff_frequency'):
+                    print(f"    {Colors.CYAN}Bluff Tendency:{Colors.RESET} {exploit['bluff_frequency']}")
+
+                # Bluff Analysis
+                if ai_analysis['bluff_analysis'] and ai_analysis['bluff_analysis'].get('indicators'):
+                    bluff = ai_analysis['bluff_analysis']
+                    print(f"\n  {Colors.BOLD}Bluff Analysis:{Colors.RESET}")
+                    if bluff.get('likelihood'):
+                        print(f"    Likelihood: {Colors.YELLOW}{bluff['likelihood']}{Colors.RESET}")
+                    if bluff.get('confidence'):
+                        print(f"    Confidence: {bluff['confidence']}")
+                    if bluff.get('probability'):
+                        print(f"    Probability: {bluff['probability']*100:.1f}%")
+
+                    print(f"    Indicators:")
+                    for indicator in bluff['indicators']:
+                        print(f"      {Colors.GRAY}• {indicator}{Colors.RESET}")
+
+                    if bluff.get('recommendation'):
+                        print(f"    {Colors.CYAN}{bluff['recommendation']}{Colors.RESET}")
+
+                # Pattern Recognition
+                if ai_analysis.get('patterns_detected'):
+                    patterns_data = ai_analysis['patterns_detected']
+                    if isinstance(patterns_data, dict) and patterns_data.get('patterns'):
+                        patterns = patterns_data['patterns']
+                        if patterns:
+                            print(f"\n  {Colors.BOLD}Betting Patterns Detected:{Colors.RESET}")
+                            for pattern in patterns:
+                                pattern_name = pattern.get('pattern', pattern.get('name', 'Unknown'))
+                                print(f"    {Colors.MAGENTA}• {pattern_name}{Colors.RESET}: {pattern.get('description', '')}")
+                                if pattern.get('counter_strategy'):
+                                    print(f"      {Colors.CYAN}Counter:{Colors.RESET} {Colors.GRAY}{pattern['counter_strategy']}{Colors.RESET}")
+
+            except ValueError as e:
+                print(f"{Colors.RED}✗ Error in opponent analysis: {e}{Colors.RESET}")
 
     # Turn
     print_header("TURN", Colors.CYAN)
